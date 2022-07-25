@@ -1,0 +1,13 @@
+homeassistant: true
+frontend: true
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://mqtt
+  # Optional: MQTT server authentication user (default: nothing)
+  #user: my_user
+  # Optional: MQTT server authentication password (default: nothing)
+  #password: my_password
+serial:
+  adapter: deconz
+  port: /dev/ttyACM0

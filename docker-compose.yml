@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - /share/Container/srv/homeautomation/zigbee2mqtt:/app/data
+      - /share/Container/srv/homeautomation/zigbee2mqtt/configuration.yaml:/app/configuration.yaml
+      - /run/udev:/run/udev:ro
+    # Uncomment if you're using network option #2.
+    # ports:
+      # - 8080:8080
+    environment:
+      - TZ=Australia/Sydney
+    devices:
+      # Make sure this matched your adapter location
+      - /dev/ttyACM0:/dev/ttyACM0
+    # Comment out if using network option #2
+    networks:
+      qnet-static-NETWORKNAME:
+        ipv4_address: 10.0.0.103 # Change to suit your network specified below
+
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    restart: unless-stopped
+    volumes:
+      - /share/Container/srv/homeautomation/mosquitto/config:/mosquitto/config
+      - /share/Container/srv/homeautomation/mosquitto/data:/mosquitto/data
+      - /share/Container/srv/homeautomation/mosquitto/log:/mosquitto/log
+    # Comment out if using network option #2
+    networks:
+      qnet-static-NETWORKNAME:
+        ipv4_address: 10.0.0.102 # Change to suit your network specified below
+
+  homebridge:
+    image: oznu/homebridge:ubuntu
+    container_name: homebridge
+    restart: unless-stopped
+    environment:
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+      - TZ=Australia/Sydney
+    # Uncomment if you're using network option #2.
+    #ports:
+    #    - 8581:8581
+    volumes:
+      - /share/Container/srv/homeautomation/homebridge:/homebridge
+    # Comment out if using network option #2
+    networks:
+      qnet-static-NETWORKNAME:
+        ipv4_address: 10.0.0.101 # Change to suit your network specified below
+
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    # Uncomment if you're using network option #2.
+    #ports:
+    #    - 8123:8123
+    volumes:
+      - /share/Container/srv/homeautomation/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    # Comment out if using network option #2
+    networks:
+      qnet-static-NETWORKNAME:
+        ipv4_address: 10.0.0.100 # Change to suit your network specified below
+
+# Comment out if using network option #2
+networks:
+  qnet-static-NETWORKNAME:
+    external: true
