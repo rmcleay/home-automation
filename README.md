@@ -10,5 +10,5 @@ following stack:
 
 A blog post explaining how to use this repository can be found at:
 
-    https://fearthecow.net/guest/home-bridge-zigbee2mqtt-mosquitto/
+https://fearthecow.net/guest/home-bridge-zigbee2mqtt-mosquitto/
 
